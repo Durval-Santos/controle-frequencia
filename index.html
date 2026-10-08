@@ -1,238 +1,414 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Controle de Frequência Escolar</title>
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+Controle de Frequência Escolar
+</title>
 
 <style>
+
 :root{
-    --azul:#2563eb;
-    --azul-hover:#1d4ed8;
-    --verde:#16a34a;
-    --vermelho:#dc2626;
-    --cinza:#e5e7eb;
-    --fundo:#f8fafc;
+
+--primary:#2563eb;
+--primary-hover:#1d4ed8;
+--success:#16a34a;
+--danger:#dc2626;
+--background:#f8fafc;
+--card:#ffffff;
+--border:#e2e8f0;
+--text:#0f172a;
+--muted:#64748b;
+
 }
 
 *{
-    box-sizing:border-box;
-    font-family:Arial,Helvetica,sans-serif;
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:
+Segoe UI,
+Arial,
+sans-serif;
 }
 
 body{
-    margin:0;
-    background:var(--fundo);
+background:var(--background);
+color:var(--text);
+padding-bottom:60px;
 }
 
 header{
-    background:var(--azul);
-    color:white;
-    padding:15px;
-    text-align:center;
-    position:sticky;
-    top:0;
-    z-index:99;
+background:var(--primary);
+color:white;
+padding:18px;
+text-align:center;
+position:sticky;
+top:0;
+z-index:100;
+}
+
+header h1{
+font-size:1.3rem;
 }
 
 .container{
-    max-width:1200px;
-    margin:auto;
-    padding:15px;
-}
-
-.tabs{
-    display:flex;
-    gap:8px;
-    flex-wrap:wrap;
-    margin-bottom:15px;
-}
-
-.tab{
-    padding:10px 15px;
-    border:none;
-    border-radius:8px;
-    cursor:pointer;
-    background:white;
-}
-
-.tab.active{
-    background:var(--azul);
-    color:white;
-}
-
-.section{
-    display:none;
-}
-
-.section.active{
-    display:block;
+max-width:1200px;
+margin:auto;
+padding:15px;
 }
 
 .card{
-    background:white;
-    padding:15px;
-    border-radius:12px;
-    margin-bottom:15px;
-    box-shadow:0 2px 6px rgba(0,0,0,.08);
+background:var(--card);
+border:1px solid var(--border);
+border-radius:12px;
+padding:16px;
+margin-bottom:16px;
+box-shadow:
+0 2px 4px rgba(0,0,0,.05);
 }
 
 h2{
-    margin-top:0;
+margin-bottom:12px;
+font-size:1.1rem;
 }
 
-input,select{
-    width:100%;
-    padding:10px;
-    margin-top:5px;
-    margin-bottom:10px;
+label{
+font-size:.9rem;
+font-weight:600;
+display:block;
+margin-bottom:5px;
+}
+
+input,
+select,
+textarea{
+
+width:100%;
+padding:10px;
+border:1px solid var(--border);
+border-radius:8px;
+margin-bottom:10px;
+
 }
 
 button{
-    cursor:pointer;
+
+border:none;
+cursor:pointer;
+padding:10px 16px;
+border-radius:8px;
+font-weight:600;
+
 }
 
-.btn{
-    background:var(--azul);
-    color:white;
-    border:none;
-    padding:10px 15px;
-    border-radius:8px;
+.btn-primary{
+
+background:var(--primary);
+color:white;
+
 }
 
-.btn:hover{
-    background:var(--azul-hover);
-}
+.btn-primary:hover{
 
-.btn-danger{
-    background:var(--vermelho);
+background:var(--primary-hover);
+
 }
 
 .btn-success{
-    background:var(--verde);
+
+background:var(--success);
+color:white;
+
+}
+
+.btn-danger{
+
+background:var(--danger);
+color:white;
+
+}
+
+.tabs{
+
+display:flex;
+flex-wrap:wrap;
+gap:5px;
+margin-bottom:15px;
+
+}
+
+.tab-btn{
+
+flex:1;
+padding:12px;
+background:white;
+border:1px solid var(--border);
+
+}
+
+.tab-btn.active{
+
+background:var(--primary);
+color:white;
+
+}
+
+.tab-content{
+
+display:none;
+
+}
+
+.tab-content.active{
+
+display:block;
+
 }
 
 table{
-    width:100%;
-    border-collapse:collapse;
-}
 
-th,td{
-    border:1px solid #ddd;
-    padding:8px;
+width:100%;
+border-collapse:collapse;
+margin-top:10px;
+
 }
 
 th{
-    background:#f1f5f9;
+
+background:#eef2ff;
+padding:10px;
+border:1px solid var(--border);
+
 }
 
-.student{
-    padding:8px;
-    border-bottom:1px solid #ddd;
+td{
+
+padding:8px;
+border:1px solid var(--border);
+
 }
 
-.flex{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
+.student-row{
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:10px;
+border-bottom:1px solid var(--border);
+
+}
+
+.student-row:last-child{
+
+border-bottom:none;
+
+}
+
+.badge{
+
+background:#dbeafe;
+color:#1e40af;
+padding:4px 8px;
+border-radius:6px;
+font-size:.8rem;
+
 }
 
 .small{
-    width:auto;
+
+font-size:.85rem;
+color:var(--muted);
+
 }
+
+@media(max-width:700px){
+
+table{
+font-size:.82rem;
+}
+
+th,
+td{
+padding:6px;
+}
+
+}
+
 </style>
+
 </head>
 
 <body>
 
 <header>
-<h1>Controle de Frequência Escolar</h1>
+
+<h1>
+Controle de Frequência Escolar
+</h1>
+
+<p>
+Turmas • Trimestres • Faltas • Consolidado
+</p>
+
 </header>
 
 <div class="container">
 
+<!-- TURMA ATIVA -->
+
 <div class="card">
-<label>Turma Ativa</label>
-<select id="turmaAtiva"></select>
+
+<label>
+Turma Ativa
+</label>
+
+<select
+id="turmaAtiva"
+onchange="trocarTurma()">
+</select>
+
 </div>
 
+<!-- MENU -->
+
 <div class="tabs">
-<button class="tab active" onclick="mostrarAba('turmas',this)">
+
+<button
+class="tab-btn active"
+onclick="abrirAba('turmas',this)">
 Turmas
 </button>
 
-<button class="tab" onclick="mostrarAba('trimestres',this)">
+<button
+class="tab-btn"
+onclick="abrirAba('trimestres',this)">
 Trimestres
 </button>
 
-<button class="tab" onclick="mostrarAba('faltas',this)">
+<button
+class="tab-btn"
+onclick="abrirAba('faltas',this)">
 Faltas
 </button>
 
-<button class="tab" onclick="mostrarAba('consolidado',this)">
+<button
+class="tab-btn"
+onclick="abrirAba('consolidado',this)">
 Consolidado
 </button>
 
-<button class="tab" onclick="mostrarAba('backup',this)">
+<button
+class="tab-btn"
+onclick="abrirAba('backup',this)">
 Backup
 </button>
+
 </div>
 
-<!-- TURMAS -->
+<!-- ===========================
+ABA TURMAS
+=========================== -->
 
-<div id="turmas" class="section active">
+<div
+id="turmas"
+class="tab-content active">
 
 <div class="card">
-<h2>Nova Turma</h2>
 
-<input id="nomeTurma" placeholder="Nome da turma">
+<h2>
+Cadastrar Turma
+</h2>
 
-<button class="btn" onclick="criarTurma()">
+<input
+id="nomeTurma"
+placeholder="Ex.: 9º Ano A">
+
+<button
+class="btn-primary"
+onclick="criarTurma()">
+
 Criar Turma
+
 </button>
+
 </div>
 
 <div class="card">
-<h2>Importar alunos TXT</h2>
 
-<input type="file" id="txtAlunos" accept=".txt">
+<h2>
+Importar Alunos TXT
+</h2>
 
-<button class="btn btn-success" onclick="importarTXT()">
-Importar
-</button>
+<p class="small">
 
-<p>
 Um aluno por linha.
+
 </p>
+
+<input
+type="file"
+id="arquivoTxt"
+accept=".txt">
+
+<button
+class="btn-success"
+onclick="importarAlunosTxt()">
+
+Importar Alunos
+
+</button>
+
 </div>
 
 <div class="card">
-<h2>Alunos da Turma</h2>
 
-<div id="listaAlunos"></div>
+<h2>
+Lista de Alunos
+</h2>
+
+<div id="listaAlunos">
 
 </div>
 
 </div>
 
-<!-- TRIMESTRES -->
+</div>
 
-<div id="trimestres" class="section">
+<!-- ===========================
+ABA TRIMESTRES
+=========================== -->
+
+<div
+id="trimestres"
+class="tab-content">
 
 <div class="card">
 
-<h2>Novo Trimestre</h2>
+<h2>
+Novo Trimestre
+</h2>
 
-<input id="nomeTri"
+<input
+id="nomeTrimestre"
 placeholder="Ex.: 1º Trimestre">
 
-<input id="mesesTri"
+<input
+id="mesesTrimestre"
 placeholder="Ex.: Fevereiro, Março, Abril, Maio">
 
-<button class="btn"
+<button
+class="btn-primary"
 onclick="criarTrimestre()">
 
-Criar Trimestre
+Cadastrar Trimestre
 
 </button>
 
@@ -240,73 +416,104 @@ Criar Trimestre
 
 <div class="card">
 
-<h2>Trimestres Cadastrados</h2>
+<h2>
+Trimestres Cadastrados
+</h2>
 
-<div id="listaTrimestres"></div>
+<div id="listaTrimestres">
 
 </div>
 
 </div>
 
-<!-- FALTAS -->
+</div>
 
-<div id="faltas" class="section">
+<!-- ===========================
+ABA FALTAS
+=========================== -->
+
+<div
+id="faltas"
+class="tab-content">
 
 <div class="card">
 
-<label>Trimestre</label>
+<label>
+Trimestre
+</label>
 
-<select id="trimestreSelecionado"
-onchange="renderFaltas()">
-
+<select
+id="selectTrimestreFaltas"
+onchange="renderizarTabelaFaltas()">
 </select>
 
 </div>
 
-<div id="areaFaltas"></div>
+<div id="areaFaltas">
 
 </div>
 
-<!-- CONSOLIDADO -->
+</div>
 
-<div id="consolidado" class="section">
+<!-- ===========================
+ABA CONSOLIDADO
+=========================== -->
+
+<div
+id="consolidado"
+class="tab-content">
 
 <div class="card">
 
-<label>Trimestre</label>
+<label>
+Trimestre
+</label>
 
-<select id="trimestreConsolidado"
-onchange="renderConsolidado()">
+<select
+id="selectTrimestreConsolidado"
+onchange="renderizarConsolidado()">
 </select>
 
 </div>
 
-<div id="tabelaConsolidado"></div>
+<div
+id="tabelaConsolidado">
+</div>
 
 </div>
 
-<!-- BACKUP -->
+<!-- ===========================
+ABA BACKUP
+=========================== -->
 
-<div id="backup" class="section">
+<div
+id="backup"
+class="tab-content">
 
 <div class="card">
 
-<h2>Backup</h2>
+<h2>
+Backup dos Dados
+</h2>
 
-<button class="btn btn-success"
+<button
+class="btn-success"
 onclick="exportarBackup()">
 
 Exportar JSON
 
 </button>
 
-<hr>
+<hr
+style="margin:15px 0">
 
-<input type="file"
+<input
+type="file"
 id="arquivoBackup"
 accept=".json">
 
-<button class="btn"
+<button
+class="btn-primary"
 onclick="importarBackup()">
 
 Restaurar Backup
@@ -321,510 +528,920 @@ Restaurar Backup
 
 <script>
 
-let dados = JSON.parse(
-localStorage.getItem("frequencia-escolar")
-) || {
-
-turmas:[],
-trimestres:[]
-
-};
-
-function salvar(){
-localStorage.setItem(
-"frequencia-escolar",
-JSON.stringify(dados)
-);
-}
-
-function mostrarAba(id,botao){
-
-document.querySelectorAll(".section")
-.forEach(s=>s.classList.remove("active"));
-
-document.querySelectorAll(".tab")
-.forEach(t=>t.classList.remove("active"));
-
-document.getElementById(id)
-.classList.add("active");
-
-botao.classList.add("active");
-}
-
-function criarTurma(){
-
-let nome =
-document.getElementById("nomeTurma").value.trim();
-
-if(!nome) return;
-
-dados.turmas.push({
-
-id:Date.now(),
-nome,
-alunos:[]
-
-});
-
-salvar();
-renderTudo();
-
-document.getElementById("nomeTurma").value="";
-
-}
-
-function criarTrimestre(){
-
-let nome =
-document.getElementById("nomeTri").value.trim();
-
-let meses =
-document.getElementById("mesesTri")
-.value
-.split(",")
-.map(m=>m.trim())
-.filter(Boolean);
-
-if(!nome || meses.length===0)
-return;
-
-dados.trimestres.push({
-
-id:Date.now(),
-nome,
-meses
-
-});
-
-salvar();
-renderTudo();
-
-document.getElementById("nomeTri").value="";
-document.getElementById("mesesTri").value="";
-
-}
-
-function turmaAtual(){
-
-let id =
-Number(
-document.getElementById("turmaAtiva").value
-);
-
-return dados.turmas.find(
-t=>t.id===id
-);
-
-}
-
-function importarTXT(){
-
-const turma = turmaAtual();
-
-if(!turma){
-alert("Selecione uma turma");
-return;
-}
-
-const arquivo =
-document.getElementById("txtAlunos").files[0];
-
-if(!arquivo){
-alert("Selecione um arquivo");
-return;
-}
-
-const reader = new FileReader();
-
-reader.onload = e=>{
-
-const linhas =
-e.target.result
-.split(/\r?\n/)
-.map(x=>x.trim())
-.filter(Boolean);
-
-linhas.forEach(nome=>{
-
-turma.alunos.push({
-
-id:Date.now()+Math.random(),
-nome,
-faltas:{}
-
-});
-
-});
-
-salvar();
-renderTudo();
-
-};
-
-reader.readAsText(arquivo);
-
-}
-
-function renderTurmas(){
-
-let select =
-document.getElementById("turmaAtiva");
-
-select.innerHTML =
-'<option value="">Selecione</option>';
-
-dados.turmas.forEach(t=>{
-
-select.innerHTML +=
-
-`<option value="${t.id}">
-${t.nome}
-</option>`;
-
-});
-
-if(dados.turmas.length){
-
-select.value =
-dados.turmas[0].id;
-
-}
-
-renderAlunos();
-
-}
-
-function renderAlunos(){
-
-let turma = turmaAtual();
-
-let div =
-document.getElementById("listaAlunos");
-
-if(!turma){
-
-div.innerHTML =
-"Nenhuma turma selecionada";
-
-return;
-}
-
-div.innerHTML="";
-
-turma.alunos.forEach(aluno=>{
-
-div.innerHTML +=
-
-`<div class="student">
-
-${aluno.nome}
-
-</div>`;
-
-});
-
-}
-
-document
-.getElementById("turmaAtiva")
-.addEventListener(
-"change",
-()=>{
-renderAlunos();
-renderFaltas();
-renderConsolidado();
-}
-);
-
-function renderTrimestres(){
-
-let html="";
-
-dados.trimestres.forEach(t=>{
-
-html += `
-
-<div style="padding:10px;border-bottom:1px solid #ddd">
-
-<strong>${t.nome}</strong><br>
-
-${t.meses.join(", ")}
-
-</div>
-
-`;
-
-});
-
-document.getElementById(
-"listaTrimestres"
-).innerHTML = html;
-
-let selects = [
-document.getElementById(
-"trimestreSelecionado"
-),
-document.getElementById(
-"trimestreConsolidado"
-)
-];
-
-selects.forEach(s=>{
-
-s.innerHTML="";
-
-dados.trimestres.forEach(t=>{
-
-s.innerHTML +=
-
-`<option value="${t.id}">
-${t.nome}
-</option>`;
-
-});
-
-});
-
-}
-
-function renderFaltas(){
-
-const turma = turmaAtual();
-
-const triId =
-Number(
-document.getElementById(
-"trimestreSelecionado"
-).value
-);
-
-const trimestre =
-dados.trimestres.find(
-t=>t.id===triId
-);
-
-if(!turma || !trimestre) return;
-
-let html =
-'<div class="card">';
-
-html += '<table>';
-
-html += '<tr><th>Aluno</th>';
-
-trimestre.meses.forEach(m=>{
-
-html+=`<th>${m}</th>`;
-
-});
-
-html+='</tr>';
-
-turma.alunos.forEach(aluno=>{
-
-html += `<tr><td>${aluno.nome}</td>`;
-
-trimestre.meses.forEach(m=>{
-
-let valor =
-aluno.faltas[m]||0;
-
-html +=
-
-`<td>
-
-<input
-type="number"
-min="0"
-value="${valor}"
-
-onchange="
-atualizarFalta(
-'${aluno.id}',
-'${m}',
-this.value
-)
-">
-
-</td>`;
-
-});
-
-html += '</tr>';
-
-});
-
-html += '</table></div>';
-
-document.getElementById(
-"areaFaltas"
-).innerHTML = html;
-
-}
-
-function atualizarFalta(
-id,
-mes,
-valor
-){
-
-const turma = turmaAtual();
-
-let aluno =
-turma.alunos.find(
-a=>a.id==id
-);
-
-aluno.faltas[mes] =
-Number(valor);
-
-salvar();
-
-renderConsolidado();
-
-}
-
-function renderConsolidado(){
-
-const turma = turmaAtual();
-
-const triId =
-Number(
-document.getElementById(
-"trimestreConsolidado"
-).value
-);
-
-const trimestre =
-dados.trimestres.find(
-t=>t.id===triId
-);
-
-if(!turma || !trimestre)
-return;
-
-let html="<table>";
-
-html+="<tr><th>Aluno</th>";
-
-trimestre.meses.forEach(m=>{
-
-html+=`<th>${m}</th>`;
-
-});
-
-html+="<th>Total</th></tr>";
-
-turma.alunos.forEach(a=>{
-
-let total=0;
-
-html += `<tr><td>${a.nome}</td>`;
-
-trimestre.meses.forEach(m=>{
-
-let v =
-a.faltas[m]||0;
-
-total += v;
-
-html += `<td>${v}</td>`;
-
-});
-
-html += `<td><strong>${total}</strong></td>`;
-
-html += "</tr>";
-
-});
-
-html += "</table>";
-
-document.getElementById(
-"tabelaConsolidado"
-).innerHTML = html;
-
-}
-
-function exportarBackup(){
-
-const blob =
-new Blob(
-[
-JSON.stringify(
-dados,
-null,
-2
-)
-],
-{
-type:"application/json"
-}
-);
-
-const a =
-document.createElement("a");
-
-a.href =
-URL.createObjectURL(blob);
-
-a.download =
-"backup-frequencia.json";
-
-a.click();
-
-}
-
-function importarBackup(){
-
-const arq =
-document.getElementById(
-"arquivoBackup"
-).files[0];
-
-if(!arq) return;
-
-const r = new FileReader();
-
-r.onload = e=>{
-
-dados =
-JSON.parse(
-e.target.result
-);
-
-salvar();
-renderTudo();
-
-alert(
-"Backup restaurado!"
-);
-
-};
-
-r.readAsText(arq);
-
-}
-
-function renderTudo(){
-
-renderTurmas();
-
-renderTrimestres();
-
-setTimeout(()=>{
-
-renderFaltas();
-
-renderConsolidado();
-
-},100);
-
-}
-
-renderTudo();
+/* PARTE 2 VIRÁ AQUI */
 
 </script>
 
 </body>
 </html>
+// =====================================
+// BANCO DE DADOS LOCAL
+// =====================================
+
+let dados = JSON.parse(
+    localStorage.getItem("controleFrequencia")
+) || {
+
+    turmas: [],
+
+    trimestres: []
+
+};
+
+// =====================================
+// SALVAR
+// =====================================
+
+function salvarDados(){
+
+    localStorage.setItem(
+        "controleFrequencia",
+        JSON.stringify(dados)
+    );
+
+}
+
+// =====================================
+// ABAS
+// =====================================
+
+function abrirAba(id,botao){
+
+    document
+    .querySelectorAll(".tab-content")
+    .forEach(aba => {
+
+        aba.classList.remove("active");
+
+    });
+
+    document
+    .querySelectorAll(".tab-btn")
+    .forEach(btn => {
+
+        btn.classList.remove("active");
+
+    });
+
+    document
+    .getElementById(id)
+    .classList.add("active");
+
+    botao.classList.add("active");
+
+}
+
+// =====================================
+// TURMA ATUAL
+// =====================================
+
+function turmaAtual(){
+
+    const id = Number(
+        document.getElementById(
+            "turmaAtiva"
+        ).value
+    );
+
+    return dados.turmas.find(
+        turma => turma.id === id
+    );
+
+}
+
+// =====================================
+// CRIAR TURMA
+// =====================================
+
+function criarTurma(){
+
+    const nome =
+    document
+    .getElementById("nomeTurma")
+    .value
+    .trim();
+
+    if(!nome){
+
+        alert(
+            "Informe o nome da turma."
+        );
+
+        return;
+    }
+
+    dados.turmas.push({
+
+        id: Date.now(),
+
+        nome: nome,
+
+        alunos: []
+
+    });
+
+    salvarDados();
+
+    document
+    .getElementById("nomeTurma")
+    .value = "";
+
+    carregarTurmas();
+
+}
+
+// =====================================
+// CARREGAR TURMAS
+// =====================================
+
+function carregarTurmas(){
+
+    const select =
+    document.getElementById(
+        "turmaAtiva"
+    );
+
+    select.innerHTML = "";
+
+    if(
+        dados.turmas.length === 0
+    ){
+
+        select.innerHTML =
+
+        `
+        <option value="">
+        Nenhuma turma cadastrada
+        </option>
+        `;
+
+        document
+        .getElementById(
+            "listaAlunos"
+        )
+        .innerHTML = "";
+
+        return;
+    }
+
+    dados.turmas.forEach(turma=>{
+
+        select.innerHTML +=
+
+        `
+        <option value="${turma.id}">
+            ${turma.nome}
+        </option>
+        `;
+
+    });
+
+    renderizarAlunos();
+
+}
+
+// =====================================
+// TROCAR TURMA
+// =====================================
+
+function trocarTurma(){
+
+    renderizarAlunos();
+
+    if(
+        typeof renderizarTabelaFaltas
+        === "function"
+    ){
+        renderizarTabelaFaltas();
+    }
+
+    if(
+        typeof renderizarConsolidado
+        === "function"
+    ){
+        renderizarConsolidado();
+    }
+
+}
+
+// =====================================
+// LISTA DE ALUNOS
+// =====================================
+
+function renderizarAlunos(){
+
+    const turma =
+    turmaAtual();
+
+    const container =
+    document.getElementById(
+        "listaAlunos"
+    );
+
+    if(!turma){
+
+        container.innerHTML =
+        "Nenhuma turma selecionada";
+
+        return;
+
+    }
+
+    if(
+        turma.alunos.length === 0
+    ){
+
+        container.innerHTML =
+
+        `
+        <p class="small">
+        Nenhum aluno cadastrado.
+        </p>
+        `;
+
+        return;
+
+    }
+
+    let html = "";
+
+    turma.alunos.forEach(aluno=>{
+
+        html +=
+
+        `
+        <div class="student-row">
+
+            <span>
+                ${aluno.nome}
+            </span>
+
+            <span class="badge">
+                Aluno
+            </span>
+
+        </div>
+        `;
+
+    });
+
+    container.innerHTML = html;
+
+}
+
+// =====================================
+// IMPORTAR TXT
+// =====================================
+
+function importarAlunosTxt(){
+
+    const turma =
+    turmaAtual();
+
+    if(!turma){
+
+        alert(
+            "Crie uma turma antes."
+        );
+
+        return;
+
+    }
+
+    const arquivo =
+    document
+    .getElementById(
+        "arquivoTxt"
+    )
+    .files[0];
+
+    if(!arquivo){
+
+        alert(
+           "Selecione um arquivo TXT."
+        );
+
+        return;
+
+    }
+
+    const leitor =
+    new FileReader();
+
+    leitor.onload =
+    function(event){
+
+        const texto =
+        event.target.result;
+
+        const alunos =
+
+        texto
+        .split(/\r?\n/)
+        .map(nome=>nome.trim())
+        .filter(nome=>nome);
+
+        alunos.forEach(nome=>{
+
+            turma.alunos.push({
+
+                id:
+                Date.now()
+                +
+                Math.random(),
+
+                nome: nome,
+
+                faltas:{}
+
+            });
+
+        });
+
+        salvarDados();
+
+        renderizarAlunos();
+
+        alert(
+            alunos.length
+            +
+            " alunos importados."
+        );
+
+    };
+
+    leitor.readAsText(
+        arquivo,
+        "UTF-8"
+    );
+
+}
+
+// =====================================
+// CRIAR TRIMESTRE
+// =====================================
+
+function criarTrimestre(){
+
+    const nome =
+
+    document
+    .getElementById(
+        "nomeTrimestre"
+    )
+    .value
+    .trim();
+
+    const meses =
+
+    document
+    .getElementById(
+        "mesesTrimestre"
+    )
+    .value
+
+    .split(",")
+
+    .map(
+        m => m.trim()
+    )
+
+    .filter(
+        m => m
+    );
+
+    if(
+        !nome ||
+        meses.length === 0
+    ){
+
+        alert(
+            "Informe trimestre e meses."
+        );
+
+        return;
+
+    }
+
+    dados.trimestres.push({
+
+        id: Date.now(),
+
+        nome: nome,
+
+        meses: meses
+
+    });
+
+    salvarDados();
+
+    document
+    .getElementById(
+        "nomeTrimestre"
+    )
+    .value = "";
+
+    document
+    .getElementById(
+        "mesesTrimestre"
+    )
+    .value = "";
+
+    carregarTrimestres();
+
+}
+
+// =====================================
+// LISTAR TRIMESTRES
+// =====================================
+
+function carregarTrimestres(){
+
+    const lista =
+
+    document.getElementById(
+        "listaTrimestres"
+    );
+
+    lista.innerHTML = "";
+
+    dados.trimestres.forEach(
+        trimestre=>{
+
+        lista.innerHTML +=
+
+        `
+        <div
+        class="student-row">
+
+            <div>
+
+                <strong>
+                ${trimestre.nome}
+                </strong>
+
+                <br>
+
+                <span
+                class="small">
+
+                ${trimestre.meses.join(", ")}
+
+                </span>
+
+            </div>
+
+            <span
+            class="badge">
+
+            ${trimestre.meses.length}
+            meses
+
+            </span>
+
+        </div>
+        `;
+
+    });
+
+    atualizarSelectsTrimestres();
+
+}
+
+// =====================================
+// POPULAR SELECTS
+// =====================================
+
+function atualizarSelectsTrimestres(){
+
+    const selects = [
+
+        document.getElementById(
+            "selectTrimestreFaltas"
+        ),
+
+        document.getElementById(
+            "selectTrimestreConsolidado"
+        )
+
+    ];
+
+    selects.forEach(select=>{
+
+        select.innerHTML = "";
+
+        dados.trimestres.forEach(
+            trimestre=>{
+
+            select.innerHTML +=
+
+            `
+            <option
+            value="${trimestre.id}">
+
+            ${trimestre.nome}
+
+            </option>
+            `;
+
+        });
+
+    });
+
+}
+
+// =====================================
+// INICIALIZAÇÃO
+// =====================================
+
+function iniciarSistema(){
+
+    carregarTurmas();
+
+    carregarTrimestres();
+
+}
+
+iniciarSistema();
+
+// =====================================
+// OBTER TRIMESTRE SELECIONADO
+// =====================================
+
+function trimestreFaltasAtual(){
+
+    const id = Number(
+        document.getElementById(
+            "selectTrimestreFaltas"
+        ).value
+    );
+
+    return dados.trimestres.find(
+        t => t.id === id
+    );
+
+}
+
+function trimestreConsolidadoAtual(){
+
+    const id = Number(
+        document.getElementById(
+            "selectTrimestreConsolidado"
+        ).value
+    );
+
+    return dados.trimestres.find(
+        t => t.id === id
+    );
+
+}
+
+// =====================================
+// ATUALIZAR FALTA
+// =====================================
+
+function atualizarFalta(
+    alunoId,
+    trimestreNome,
+    mes,
+    valor
+){
+
+    const turma = turmaAtual();
+
+    if(!turma){
+        return;
+    }
+
+    const aluno =
+    turma.alunos.find(
+        a => a.id == alunoId
+    );
+
+    if(!aluno){
+        return;
+    }
+
+    if(!aluno.faltas){
+        aluno.faltas = {};
+    }
+
+    if(
+        !aluno.faltas[trimestreNome]
+    ){
+
+        aluno.faltas[
+            trimestreNome
+        ] = {};
+
+    }
+
+    aluno.faltas[
+        trimestreNome
+    ][mes] = Number(valor) || 0;
+
+    salvarDados();
+
+}
+
+// =====================================
+// TABELA DE FALTAS
+// =====================================
+
+function renderizarTabelaFaltas(){
+
+    const turma =
+    turmaAtual();
+
+    const trimestre =
+    trimestreFaltasAtual();
+
+    const area =
+    document.getElementById(
+        "areaFaltas"
+    );
+
+    if(
+        !turma ||
+        !trimestre
+    ){
+
+        area.innerHTML =
+
+        `
+        <div class="card">
+        Selecione uma turma e um trimestre.
+        </div>
+        `;
+
+        return;
+    }
+
+    let html =
+    '<div class="card">';
+
+    html += '<table>';
+
+    html += '<tr>';
+
+    html +=
+    '<th>Aluno</th>';
+
+    trimestre.meses.forEach(
+        mes => {
+
+        html +=
+        `<th>${mes}</th>`;
+
+    });
+
+    html += '</tr>';
+
+    turma.alunos.forEach(
+        aluno => {
+
+        html += '<tr>';
+
+        html +=
+
+        `
+        <td>
+        ${aluno.nome}
+        </td>
+        `;
+
+        trimestre.meses.forEach(
+            mes => {
+
+            const valor =
+
+            aluno.faltas?.[
+                trimestre.nome
+            ]?.[
+                mes
+            ] || 0;
+
+            html +=
+
+            `
+            <td>
+
+            <input
+
+            type="number"
+
+            min="0"
+
+            value="${valor}"
+
+            onchange="
+
+            atualizarFalta(
+
+            '${aluno.id}',
+
+            '${trimestre.nome}',
+
+            '${mes}',
+
+            this.value
+
+            );
+
+            renderizarConsolidado();
+
+            "
+
+            >
+
+            </td>
+            `;
+
+        });
+
+        html += '</tr>';
+
+    });
+
+    html += '</table>';
+
+    html += '</div>';
+
+    area.innerHTML = html;
+
+}
+
+// =====================================
+// CONSOLIDADO
+// =====================================
+
+function renderizarConsolidado(){
+
+    const turma =
+    turmaAtual();
+
+    const trimestre =
+    trimestreConsolidadoAtual();
+
+    const area =
+    document.getElementById(
+        "tabelaConsolidado"
+    );
+
+    if(
+        !turma ||
+        !trimestre
+    ){
+
+        area.innerHTML = "";
+
+        return;
+    }
+
+    let html =
+    '<div class="card">';
+
+    html += '<table>';
+
+    html += '<tr>';
+
+    html += '<th>Aluno</th>';
+
+    trimestre.meses.forEach(
+        mes => {
+
+        html +=
+        `<th>${mes}</th>`;
+
+    });
+
+    html +=
+    '<th>Total</th>';
+
+    html +=
+    '</tr>';
+
+    turma.alunos.forEach(
+        aluno => {
+
+        let totalAluno = 0;
+
+        html += '<tr>';
+
+        html +=
+        `<td>${aluno.nome}</td>`;
+
+        trimestre.meses.forEach(
+            mes => {
+
+            let valor =
+
+            aluno.faltas?.[
+                trimestre.nome
+            ]?.[
+                mes
+            ] || 0;
+
+            totalAluno += valor;
+
+            html +=
+            `<td>${valor}</td>`;
+
+        });
+
+        html +=
+
+        `
+        <td
+        style="
+        font-weight:bold;
+        background:#f1f5f9;
+        ">
+
+        ${totalAluno}
+
+        </td>
+        `;
+
+        html += '</tr>';
+
+    });
+
+    html +=
+
+    `
+    <tr
+    style="
+    background:#dbeafe;
+    font-weight:bold;
+    ">
+    `;
+
+    html +=
+    '<td>TOTAL DA TURMA</td>';
+
+    let totalGeral = 0;
+
+    trimestre.meses.forEach(
+        mes => {
+
+        let somaMes =
+
+        turma.alunos.reduce(
+
+            (acumulado,
+             aluno)=>{
+
+                return acumulado +
+
+                (
+
+                aluno.faltas?.[
+                    trimestre.nome
+                ]?.[
+                    mes
+                ] || 0
+
+                );
+
+            },
+
+            0
+
+        );
+
+        totalGeral += somaMes;
+
+        html +=
+
+        `
+        <td>
+        ${somaMes}
+        </td>
+        `;
+
+    });
+
+    html +=
+
+    `
+    <td>
+    ${totalGeral}
+    </td>
+    `;
+
+    html += '</tr>';
+
+    html += '</table>';
+
+    html += '</div>';
+
+    area.innerHTML = html;
+
+}
+
+// =====================================
+// EXPORTAR JSON
+//
+
+
