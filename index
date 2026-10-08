@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Frequência Trimestral</title>
+    <style>
+        :root {
+            --primary: #2b6cb0;
+            --primary-hover: #2c5282;
+            --bg: #f7fafc;
+            --card-bg: #ffffff;
+            --text: #2d3748;
+            --border: #e2e8f0;
+            --success: #48bb78;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            max-width: 1000px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            max-width: 1000px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #718096;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-bottom: 2px solid var(--card-bg);
+            margin-bottom: -12px;
+        }
+
+        .content-section {
+            display: none;
+            width: 100%;
+            max-width: 1000px;
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        /* Grid para a aba inicial */
+        .config-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .config-grid { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            background: #fafafa;
+        }
+
+        .card h3 {
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        input[type="file"], input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: white;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+            display: inline-block;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .btn:hover { background-color: var(--primary-hover); }
+        .btn-success { background-color: var(--success); }
+        .btn-success:hover { background-color: #38a169; }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        /* Lista de Alunos Lateral */
+        .student-list-container {
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 15px;
+            max-height: 450px;
+            overflow-y: auto;
+            background: white;
+        }
+
+        .student-item {
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .student-item:last-child { border-bottom: none; }
+        
+        .delete-btn {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 2px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* Tabelas de Frequencia */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            border: 1px solid var(--border);
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #edf2f7;
+            color: var(--text);
+        }
+
+        .input-table {
+            width: 80px;
+            padding: 6px;
+            text-align: center;
+        }
+
+        .total-badge {
+            font-weight: bold;
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Controle de Frequência Escolar</h1>
+        <p>Gestão de presença simplificada por trimestre</p>
+    </header>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('config')">⚙ Configurações e Alunos</button>
+        <button class="tab-btn" onclick="switchTab('frequencia')">📅 Lançar Frequência</button>
+        <button class="tab-btn" onclick="switchTab('consolidado')">📊 Consolidado Trimestral</button>
+    </div>
+
+    <!-- ABA 1: CONFIGURAÇÕES -->
+    <div id="tab-config" class="content-section active">
+        <div class="config-grid">
+            <div>
+                <div class="card">
+                    <h3>Importar Lista de Alunos (.txt)</h3>
+                    <div class="form-group">
+                        <label>Selecione o arquivo com um nome por linha:</label>
+                        <input type="file" id="txtFile" accept=".txt">
+                    </div>
+                    <button class="btn" onclick="importTxt()">📂 Carregar Informações do TXT</button>
+                </div>
+
+                <div class="card">
+                    <h3>Adicionar Aluno Manualmente</h3>
+                    <div class="form-group" style="display: flex; gap: 10px; margin-bottom: 0;">
+                        <input type="text" id="manualName" placeholder="Nome completo do aluno">
+                        <button class="btn" onclick="addManualStudent()">Adicionar</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Backup e Transferência de Dados</h3>
+                    <p style="font-size: 14px; color: #4a5568; margin-bottom: 15px;">Os dados salvam automaticamente no navegador, mas você pode exportar cópias de segurança.</p>
+                    <div class="form-group">
+                        <label>Importar Backup (.json):</label>
+                        <input type="file" id="jsonFile" accept=".json" onchange="importJson(event)">
+                    </div>
+                    <button class="btn btn-success" onclick="exportJson()">⬇ Baixar Cópia de Backup (JSON)</button>
+                </div>
+            </div>
+
+            <div>
+                <h3>Alunos Cadastrados (<span id="student-count">0</span>)</h3>
+                <div class="student-list-container" id="student-list">
+                    <!-- Gerado dinamicamente -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ABA 2: LANÇAR FREQUÊNCIA -->
+    <div id="tab-frequencia" class="content-section">
+        <div class="card" style="margin-bottom: 15px;">
+            <div class="form-group" style="max-width: 300px; margin-bottom: 0;">
+                <label for="monthSelect">Selecione o Mês de Trabalho:</label>
+                <select id="monthSelect" onchange="renderFrequenciaTable()">
+                    <option value="mes1">Mês 1 (Primeiro mês do ciclo)</option>
+                    <option value="mes2">Mês 2 (Segundo mês do ciclo)</option>
+                    <option value="mes3">Mês 3 (Terceiro mês do ciclo)</option>
+                </select>
+            </div>
+        </div>
+
+        <h3>Registro de Faltas Mensais</h3>
+        <table id="freqTable">
+            <thead>
+                <tr>
+                    <th>Nome do Aluno</th>
+                    <th style="width: 150px;">Número de Faltas</th>
+                </tr>
+            </thead>
+            <tbody id="freqTableBody">
+                <!-- Gerado dinamicamente -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ABA 3: CONSOLIDADO -->
+    <div id="tab-consolidado" class="content-section">
+        <h3>Resumo e Consolidado do Trimestre</h3>
+        <p style="font-size: 14px; color: #4a5568; margin-bottom: 15px;">Soma automatizada das faltas acumuladas no período.</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome do Aluno</th>
+                    <th style="text-align: center;">Mês 1</th>
+                    <th style="text-align: center;">Mês 2</th>
+                    <th style="text-align: center;">Mês 3</th>
+                    <th style="text-align: center; width: 180px;">Total do Trimestre</th>
+                </tr>
+            </thead>
+            <tbody id="consolidadoTableBody">
+                <!-- Gerado dinamicamente -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Estado Global da Aplicação
+        let appData = {
+            students: [], // Array de strings (nomes)
+            faltas: {}    // Estrutura: { 'Nome': { mes1: 0, mes2: 0, mes3: 0 } }
+        };
