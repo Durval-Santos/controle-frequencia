@@ -1,323 +1,830 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="theme-color" content="#2563eb">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <title>Controle de Alunos e Frequência Trimestral</title>
-    <style>
-        /* ==========================================================================
-           VARIÁVEIS DE ESTILO (Temas e Cores padrão do aplicativo)
-           ========================================================================== */
-        :root {
-            --primary: #2563eb;         /* Azul principal */
-            --primary-hover: #1d4ed8;   /* Azul ao passar o mouse/clicar */
-            --bg: #f8fafc;              /* Cor de fundo da página */
-            --card-bg: #ffffff;         /* Cor de fundo dos cartões */
-            --text: #0f172a;            /* Texto principal */
-            --text-muted: #64748b;      /* Texto secundário/atenuado */
-            --border: #e2e8f0;          /* Cor das bordas */
-            --danger: #ef4444;          /* Vermelho de atenção/exclusão */
-            --danger-bg: #fef2f2;       /* Fundo vermelho atenuado */
-            --success: #10b981;         /* Verde para sucesso/salvamento */
-            --success-bg: #ecfdf5;      /* Fundo verde atenuado */
-            --radius: 12px;             /* Arredondamento padrão dos cantos */
-            --shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -2px rgba(0,0,0,0.05);
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Controle de Frequência Escolar</title>
 
-        /* Configurações básicas globais */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            -webkit-tap-highlight-color: transparent; /* Remove o flash azul ao clicar no mobile */
-        }
+<style>
+:root{
+    --azul:#2563eb;
+    --azul-hover:#1d4ed8;
+    --verde:#16a34a;
+    --vermelho:#dc2626;
+    --cinza:#e5e7eb;
+    --fundo:#f8fafc;
+}
 
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            padding-bottom: 80px;
-            line-height: 1.5;
-        }
+*{
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
 
-        /* Cabeçalho Fixo */
-        header {
-            background-color: var(--primary);
-            color: white;
-            padding: 16px;
-            text-align: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-        }
+body{
+    margin:0;
+    background:var(--fundo);
+}
 
-        header h1 {
-            font-size: 1.2rem;
-            font-weight: 700;
-        }
+header{
+    background:var(--azul);
+    color:white;
+    padding:15px;
+    text-align:center;
+    position:sticky;
+    top:0;
+    z-index:99;
+}
 
-        header p {
-            font-size: 0.8rem;
-            opacity: 0.9;
-            margin-top: 2px;
-        }
+.container{
+    max-width:1200px;
+    margin:auto;
+    padding:15px;
+}
 
-        /* Container centralizado para telas mobile-first */
-        .container {
-            padding: 12px;
-            max-width: 680px;
-            margin: 0 auto;
-        }
+.tabs{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-bottom:15px;
+}
 
-        /* Abas de Navegação Estilo Mobile (Sticky abaixo do header) */
-        .nav-tabs {
-            display: flex;
-            background: white;
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 57px;
-            z-index: 99;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
+.tab{
+    padding:10px 15px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    background:white;
+}
 
-        .tab-btn {
-            flex: 1;
-            min-width: 85px;
-            padding: 14px 6px;
-            border: none;
-            background: none;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            border-bottom: 3px solid transparent;
-            cursor: pointer;
-            white-space: nowrap;
-            text-align: center;
-        }
+.tab.active{
+    background:var(--azul);
+    color:white;
+}
 
-        .tab-btn.active {
-            color: var(--primary);
-            border-bottom-color: var(--primary);
-        }
+.section{
+    display:none;
+}
 
-        /* Controle de visibilidade das seções */
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.2s ease-in-out;
-        }
+.section.active{
+    display:block;
+}
 
-        .tab-content.active {
-            display: block;
-        }
+.card{
+    background:white;
+    padding:15px;
+    border-radius:12px;
+    margin-bottom:15px;
+    box-shadow:0 2px 6px rgba(0,0,0,.08);
+}
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+h2{
+    margin-top:0;
+}
 
-        /* Componentes de Bloco (Cards) */
-        .card {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            padding: 16px;
-            margin-bottom: 16px;
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow);
-        }
+input,select{
+    width:100%;
+    padding:10px;
+    margin-top:5px;
+    margin-bottom:10px;
+}
 
-        .card-title {
-            font-size: 1rem;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: var(--text);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-        }
+button{
+    cursor:pointer;
+}
 
-        .form-group {
-            margin-bottom: 14px;
-        }
+.btn{
+    background:var(--azul);
+    color:white;
+    border:none;
+    padding:10px 15px;
+    border-radius:8px;
+}
 
-        .form-group label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: var(--text-muted);
-        }
+.btn:hover{
+    background:var(--azul-hover);
+}
 
-        /* Inputs padronizados e otimizados para toque (mínimo 44px de altura) */
-        input[type="text"],
-        input[type="number"],
-        input[type="file"],
-        select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 1rem;
-            background-color: #fff;
-            color: var(--text);
-            outline: none;
-            transition: border-color 0.2s;
-            min-height: 44px;
-        }
+.btn-danger{
+    background:var(--vermelho);
+}
 
-        input[type="text"]:focus,
-        input[type="number"]:focus,
-        select:focus {
-            border-color: var(--primary);
-        }
+.btn-success{
+    background:var(--verde);
+}
 
-        /* Botões estruturados */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            padding: 12px 16px;
-            border: none;
-            border-radius: 8px;
-            background-color: var(--primary);
-            color: white;
-            font-size: 0.95rem;
-            font-weight: 600;
-            cursor: pointer;
-            text-align: center;
-            min-height: 44px;
-        }
+table{
+    width:100%;
+    border-collapse:collapse;
+}
 
-        .btn:active {
-            background-color: var(--primary-hover);
-        }
+th,td{
+    border:1px solid #ddd;
+    padding:8px;
+}
 
-        .btn-secondary {
-            background-color: #e2e8f0;
-            color: var(--text);
-        }
+th{
+    background:#f1f5f9;
+}
 
-        .btn-danger {
-            background-color: var(--danger);
-            color: white;
-        }
+.student{
+    padding:8px;
+    border-bottom:1px solid #ddd;
+}
 
-        .btn-success {
-            background-color: var(--success);
-            color: white;
-        }
+.flex{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
 
-        .btn-sm {
-            padding: 8px 12px;
-            font-size: 0.8rem;
-            width: auto;
-            min-height: 36px;
-        }
-
-        /* Caixa de seleção rápida de turma ativa no topo */
-        .turma-selector {
-            background: #eff6ff;
-            border: 1px solid #bfdbfe;
-            border-radius: var(--radius);
-            padding: 12px;
-            margin-bottom: 16px;
-        }
-
-        .turma-selector-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-        }
-
-        /* Itens de listagem de alunos */
-        .student-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border);
-            gap: 10px;
-        }
-
-        .student-item:last-child {
-            border-bottom: none;
-        }
-
-        .student-info {
-            flex: 1;
-        }
-
-        .student-name {
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-
-        .text-sm {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-        }
-
-        /* Estilização básica de Tabelas para a aba Consolidada */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85rem;
-        }
-
-        th, td {
-            padding: 8px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        th {
-            background: #f1f5f9;
-            text-align: left;
-            font-weight: 700;
-        }
-    </style>
+.small{
+    width:auto;
+}
+</style>
 </head>
+
 <body>
 
-    <!-- Cabeçalho Principal -->
-    <header>
-        <h1>Controle de Frequência</h1>
-        <p>Presença e Faltas Trimestrais</p>
-    </header>
+<header>
+<h1>Controle de Frequência Escolar</h1>
+</header>
 
-    <!-- Menu Superior de Abas Dinâmicas -->
-    <nav class="nav-tabs">
-        <button class="tab-btn active" onclick="switchTab('tab-turmas')">1. Inicial / Alunos</button>
-        <button class="tab-btn" onclick="switchTab('tab-frequencia')">2. Lançar Faltas</button>
-        <button class="tab-btn" onclick="switchTab('tab-consolidado')">3. Consolidado</button>
-    </nav>
+<div class="container">
 
-    <div class="container">
+<div class="card">
+<label>Turma Ativa</label>
+<select id="turmaAtiva"></select>
+</div>
 
-        <!-- Seletor de Turma Ativa Global (Visível em todas as abas) -->
-        <div class="turma-selector">
-            <div class="turma-selector-header">
-                <div style="flex: 1;">
-                    <label style="font-size: 0.75rem; font-weight: 700; color: #1e40af; display: block;">TURMA ATIVA SELECIONADA:</label>
-                    <select id="globalTurmaSelect" onchange="changeActiveTurma(this.value)">
-                        <option value="">Nenhuma turma cadastrada</option>
-                    </select>
-                </div>
-                <button class="btn btn-sm btn-secondary" onclick="renameActiveTurmaPrompt()">✏️ Renomear</button>
-            </div>
-        </div>
+<div class="tabs">
+<button class="tab active" onclick="mostrarAba('turmas',this)">
+Turmas
+</button>
 
-        <!-- ==========================================================================
-             ABA 1: GERENCIAMENTO DE TURMAS, IMPORTAÇÕES E BACKUPS (.TXT E .JSON)
-             ========================================================================== -->
-        <div id="tab-turmas" class="tab-content active">
+<button class="tab" onclick="mostrarAba('trimestres',this)">
+Trimestres
+</button>
 
-            <!-- Card de Backup JSON -->
-            <div class="card" style="border: 1px solid #cbd5e1; background: #f8fafc;">
+<button class="tab" onclick="mostrarAba('faltas',this)">
+Faltas
+</button>
+
+<button class="tab" onclick="mostrarAba('consolidado',this)">
+Consolidado
+</button>
+
+<button class="tab" onclick="mostrarAba('backup',this)">
+Backup
+</button>
+</div>
+
+<!-- TURMAS -->
+
+<div id="turmas" class="section active">
+
+<div class="card">
+<h2>Nova Turma</h2>
+
+<input id="nomeTurma" placeholder="Nome da turma">
+
+<button class="btn" onclick="criarTurma()">
+Criar Turma
+</button>
+</div>
+
+<div class="card">
+<h2>Importar alunos TXT</h2>
+
+<input type="file" id="txtAlunos" accept=".txt">
+
+<button class="btn btn-success" onclick="importarTXT()">
+Importar
+</button>
+
+<p>
+Um aluno por linha.
+</p>
+</div>
+
+<div class="card">
+<h2>Alunos da Turma</h2>
+
+<div id="listaAlunos"></div>
+
+</div>
+
+</div>
+
+<!-- TRIMESTRES -->
+
+<div id="trimestres" class="section">
+
+<div class="card">
+
+<h2>Novo Trimestre</h2>
+
+<input id="nomeTri"
+placeholder="Ex.: 1º Trimestre">
+
+<input id="mesesTri"
+placeholder="Ex.: Fevereiro, Março, Abril, Maio">
+
+<button class="btn"
+onclick="criarTrimestre()">
+
+Criar Trimestre
+
+</button>
+
+</div>
+
+<div class="card">
+
+<h2>Trimestres Cadastrados</h2>
+
+<div id="listaTrimestres"></div>
+
+</div>
+
+</div>
+
+<!-- FALTAS -->
+
+<div id="faltas" class="section">
+
+<div class="card">
+
+<label>Trimestre</label>
+
+<select id="trimestreSelecionado"
+onchange="renderFaltas()">
+
+</select>
+
+</div>
+
+<div id="areaFaltas"></div>
+
+</div>
+
+<!-- CONSOLIDADO -->
+
+<div id="consolidado" class="section">
+
+<div class="card">
+
+<label>Trimestre</label>
+
+<select id="trimestreConsolidado"
+onchange="renderConsolidado()">
+</select>
+
+</div>
+
+<div id="tabelaConsolidado"></div>
+
+</div>
+
+<!-- BACKUP -->
+
+<div id="backup" class="section">
+
+<div class="card">
+
+<h2>Backup</h2>
+
+<button class="btn btn-success"
+onclick="exportarBackup()">
+
+Exportar JSON
+
+</button>
+
+<hr>
+
+<input type="file"
+id="arquivoBackup"
+accept=".json">
+
+<button class="btn"
+onclick="importarBackup()">
+
+Restaurar Backup
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+let dados = JSON.parse(
+localStorage.getItem("frequencia-escolar")
+) || {
+
+turmas:[],
+trimestres:[]
+
+};
+
+function salvar(){
+localStorage.setItem(
+"frequencia-escolar",
+JSON.stringify(dados)
+);
+}
+
+function mostrarAba(id,botao){
+
+document.querySelectorAll(".section")
+.forEach(s=>s.classList.remove("active"));
+
+document.querySelectorAll(".tab")
+.forEach(t=>t.classList.remove("active"));
+
+document.getElementById(id)
+.classList.add("active");
+
+botao.classList.add("active");
+}
+
+function criarTurma(){
+
+let nome =
+document.getElementById("nomeTurma").value.trim();
+
+if(!nome) return;
+
+dados.turmas.push({
+
+id:Date.now(),
+nome,
+alunos:[]
+
+});
+
+salvar();
+renderTudo();
+
+document.getElementById("nomeTurma").value="";
+
+}
+
+function criarTrimestre(){
+
+let nome =
+document.getElementById("nomeTri").value.trim();
+
+let meses =
+document.getElementById("mesesTri")
+.value
+.split(",")
+.map(m=>m.trim())
+.filter(Boolean);
+
+if(!nome || meses.length===0)
+return;
+
+dados.trimestres.push({
+
+id:Date.now(),
+nome,
+meses
+
+});
+
+salvar();
+renderTudo();
+
+document.getElementById("nomeTri").value="";
+document.getElementById("mesesTri").value="";
+
+}
+
+function turmaAtual(){
+
+let id =
+Number(
+document.getElementById("turmaAtiva").value
+);
+
+return dados.turmas.find(
+t=>t.id===id
+);
+
+}
+
+function importarTXT(){
+
+const turma = turmaAtual();
+
+if(!turma){
+alert("Selecione uma turma");
+return;
+}
+
+const arquivo =
+document.getElementById("txtAlunos").files[0];
+
+if(!arquivo){
+alert("Selecione um arquivo");
+return;
+}
+
+const reader = new FileReader();
+
+reader.onload = e=>{
+
+const linhas =
+e.target.result
+.split(/\r?\n/)
+.map(x=>x.trim())
+.filter(Boolean);
+
+linhas.forEach(nome=>{
+
+turma.alunos.push({
+
+id:Date.now()+Math.random(),
+nome,
+faltas:{}
+
+});
+
+});
+
+salvar();
+renderTudo();
+
+};
+
+reader.readAsText(arquivo);
+
+}
+
+function renderTurmas(){
+
+let select =
+document.getElementById("turmaAtiva");
+
+select.innerHTML =
+'<option value="">Selecione</option>';
+
+dados.turmas.forEach(t=>{
+
+select.innerHTML +=
+
+`<option value="${t.id}">
+${t.nome}
+</option>`;
+
+});
+
+if(dados.turmas.length){
+
+select.value =
+dados.turmas[0].id;
+
+}
+
+renderAlunos();
+
+}
+
+function renderAlunos(){
+
+let turma = turmaAtual();
+
+let div =
+document.getElementById("listaAlunos");
+
+if(!turma){
+
+div.innerHTML =
+"Nenhuma turma selecionada";
+
+return;
+}
+
+div.innerHTML="";
+
+turma.alunos.forEach(aluno=>{
+
+div.innerHTML +=
+
+`<div class="student">
+
+${aluno.nome}
+
+</div>`;
+
+});
+
+}
+
+document
+.getElementById("turmaAtiva")
+.addEventListener(
+"change",
+()=>{
+renderAlunos();
+renderFaltas();
+renderConsolidado();
+}
+);
+
+function renderTrimestres(){
+
+let html="";
+
+dados.trimestres.forEach(t=>{
+
+html += `
+
+<div style="padding:10px;border-bottom:1px solid #ddd">
+
+<strong>${t.nome}</strong><br>
+
+${t.meses.join(", ")}
+
+</div>
+
+`;
+
+});
+
+document.getElementById(
+"listaTrimestres"
+).innerHTML = html;
+
+let selects = [
+document.getElementById(
+"trimestreSelecionado"
+),
+document.getElementById(
+"trimestreConsolidado"
+)
+];
+
+selects.forEach(s=>{
+
+s.innerHTML="";
+
+dados.trimestres.forEach(t=>{
+
+s.innerHTML +=
+
+`<option value="${t.id}">
+${t.nome}
+</option>`;
+
+});
+
+});
+
+}
+
+function renderFaltas(){
+
+const turma = turmaAtual();
+
+const triId =
+Number(
+document.getElementById(
+"trimestreSelecionado"
+).value
+);
+
+const trimestre =
+dados.trimestres.find(
+t=>t.id===triId
+);
+
+if(!turma || !trimestre) return;
+
+let html =
+'<div class="card">';
+
+html += '<table>';
+
+html += '<tr><th>Aluno</th>';
+
+trimestre.meses.forEach(m=>{
+
+html+=`<th>${m}</th>`;
+
+});
+
+html+='</tr>';
+
+turma.alunos.forEach(aluno=>{
+
+html += `<tr><td>${aluno.nome}</td>`;
+
+trimestre.meses.forEach(m=>{
+
+let valor =
+aluno.faltas[m]||0;
+
+html +=
+
+`<td>
+
+<input
+type="number"
+min="0"
+value="${valor}"
+
+onchange="
+atualizarFalta(
+'${aluno.id}',
+'${m}',
+this.value
+)
+">
+
+</td>`;
+
+});
+
+html += '</tr>';
+
+});
+
+html += '</table></div>';
+
+document.getElementById(
+"areaFaltas"
+).innerHTML = html;
+
+}
+
+function atualizarFalta(
+id,
+mes,
+valor
+){
+
+const turma = turmaAtual();
+
+let aluno =
+turma.alunos.find(
+a=>a.id==id
+);
+
+aluno.faltas[mes] =
+Number(valor);
+
+salvar();
+
+renderConsolidado();
+
+}
+
+function renderConsolidado(){
+
+const turma = turmaAtual();
+
+const triId =
+Number(
+document.getElementById(
+"trimestreConsolidado"
+).value
+);
+
+const trimestre =
+dados.trimestres.find(
+t=>t.id===triId
+);
+
+if(!turma || !trimestre)
+return;
+
+let html="<table>";
+
+html+="<tr><th>Aluno</th>";
+
+trimestre.meses.forEach(m=>{
+
+html+=`<th>${m}</th>`;
+
+});
+
+html+="<th>Total</th></tr>";
+
+turma.alunos.forEach(a=>{
+
+let total=0;
+
+html += `<tr><td>${a.nome}</td>`;
+
+trimestre.meses.forEach(m=>{
+
+let v =
+a.faltas[m]||0;
+
+total += v;
+
+html += `<td>${v}</td>`;
+
+});
+
+html += `<td><strong>${total}</strong></td>`;
+
+html += "</tr>";
+
+});
+
+html += "</table>";
+
+document.getElementById(
+"tabelaConsolidado"
+).innerHTML = html;
+
+}
+
+function exportarBackup(){
+
+const blob =
+new Blob(
+[
+JSON.stringify(
+dados,
+null,
+2
+)
+],
+{
+type:"application/json"
+}
+);
+
+const a =
+document.createElement("a");
+
+a.href =
+URL.createObjectURL(blob);
+
+a.download =
+"backup-frequencia.json";
+
+a.click();
+
+}
+
+function importarBackup(){
+
+const arq =
+document.getElementById(
+"arquivoBackup"
+).files[0];
+
+if(!arq) return;
+
+const r = new FileReader();
+
+r.onload = e=>{
+
+dados =
+JSON.parse(
+e.target.result
+);
+
+salvar();
+renderTudo();
+
+alert(
+"Backup restaurado!"
+);
+
+};
+
+r.readAsText(arq);
+
+}
+
+function renderTudo(){
+
+renderTurmas();
+
+renderTrimestres();
+
+setTimeout(()=>{
+
+renderFaltas();
+
+renderConsolidado();
+
+},100);
+
+}
+
+renderTudo();
+
+</script>
+
+</body>
+</html>
