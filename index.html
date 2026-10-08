@@ -83,7 +83,7 @@
 
         .tab-btn {
             flex: 1;
-            min-width: 120px;
+            min-width: 85px;
             padding: 14px 6px;
             border: none;
             background: none;
@@ -259,639 +259,87 @@
             font-size: 0.95rem;
         }
 
-        .stat-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 14px;
-        }
-
-        .stat-box {
-            background: #f1f5f9;
-            padding: 10px;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        .stat-box .num {
-            font-size: 1.25rem;
-            font-weight: 800;
-            color: var(--primary);
-        }
-
-        .stat-box .label {
-            font-size: 0.72rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            font-weight: 600;
-        }
-
         .text-sm {
             font-size: 0.8rem;
             color: var(--text-muted);
         }
 
-        .badge {
-            font-size: 0.7rem;
-            font-weight: 700;
-            padding: 3px 8px;
-            border-radius: 4px;
-            display: inline-block;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
         }
 
-        .badge-danger {
-            background: var(--danger-bg);
-            color: #b91c1c;
-            border: 1px solid #fca5a5;
+        th, td {
+            padding: 8px;
+            border-bottom: 1px solid var(--border);
         }
 
-        .badge-success {
-            background: var(--success-bg);
-            color: #15803d;
-            border: 1px solid #86efac;
-        }
-
-        .counter-container {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            justify-content: flex-end;
-            flex-wrap: wrap;
-        }
-
-        .btn-counter {
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 1px solid var(--border);
-            background: white;
-            border-radius: 8px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .btn-counter:active {
+        th {
             background: #f1f5f9;
-        }
-
-        .counter-input {
-            width: 50px;
-            min-height: 36px !important;
-            padding: 4px !important;
-            text-align: center;
-            font-weight: 700;
-        }
-
-        .muted {
-            color: var(--text-muted);
-            font-size: 0.8rem;
-        }
-
-        .stack {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .row {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-
-        .spacer {
-            flex: 1;
-        }
-
-        .danger-text {
-            color: var(--danger);
-            font-weight: 700;
-        }
-
-        .success-text {
-            color: var(--success);
+            text-align: left;
             font-weight: 700;
         }
     </style>
 </head>
 <body>
+
     <header>
-        <h1>Controle de Presença Escolar</h1>
-        <p>Gestão de Frequência Trimestral</p>
+        <h1>Controle de Frequência</h1>
+        <p>Presença e Faltas Trimestrais</p>
     </header>
 
     <nav class="nav-tabs">
-        <button class="tab-btn active" data-tab="tab-turmas">1. Turmas / Backup</button>
-        <button class="tab-btn" data-tab="tab-frequencia">2. Faltas Mensais</button>
-        <button class="tab-btn" data-tab="tab-consolidado">3. Consolidado</button>
+        <button class="tab-btn active" onclick="switchTab('tab-turmas')">1. Inicial / Alunos</button>
+        <button class="tab-btn" onclick="switchTab('tab-frequencia')">2. Lançar Faltas</button>
+        <button class="tab-btn" onclick="switchTab('tab-consolidado')">3. Consolidado</button>
     </nav>
 
     <div class="container">
+
+        <!-- Seletor de Turma Ativa Global -->
         <div class="turma-selector">
             <div class="turma-selector-header">
                 <div style="flex: 1;">
                     <label style="font-size: 0.75rem; font-weight: 700; color: #1e40af; display: block;">TURMA ATIVA SELECIONADA:</label>
-                    <select id="globalTurmaSelect">
+                    <select id="globalTurmaSelect" onchange="changeActiveTurma(this.value)">
                         <option value="">Nenhuma turma cadastrada</option>
                     </select>
                 </div>
-                <button class="btn btn-sm btn-secondary" id="renameTurmaBtn">✏️ Renomear</button>
+                <button class="btn btn-sm btn-secondary" onclick="renameActiveTurmaPrompt()">✏️ Renomear</button>
             </div>
         </div>
 
-        <section id="tab-turmas" class="tab-content active">
-            <div class="card">
-                <div class="card-title">Criar turma</div>
+        <!-- ABA 1: INICIAL / ALUNOS E BACKUP -->
+        <div id="tab-turmas" class="tab-content active">
+
+            <div class="card" style="border: 1px solid #cbd5e1; background: #f8fafc;">
+                <div class="card-title">💾 Backup e Transferência de Dados</div>
+                <p class="text-sm" style="margin-bottom: 12px;">
+                    Os dados são salvos automaticamente no seu dispositivo.
+                </p>
+
                 <div class="form-group">
-                    <label for="newTurmaName">Nome da turma</label>
-                    <input id="newTurmaName" type="text" placeholder="Ex.: 6º Ano A">
+                    <button class="btn btn-sm btn-secondary" style="width: 100%; min-height: 44px;" onclick="exportJSONBackup()">
+                        ⬇️ Baixar Cópia de Backup (JSON)
+                    </button>
                 </div>
-                <button class="btn" id="createTurmaBtn">Adicionar turma</button>
+
+                <hr style="border: 0; border-top: 1px solid var(--border); margin: 14px 0;">
+
+                <div class="form-group">
+                    <label for="jsonFileInput">1. Selecionar Arquivo de Backup (.json):</label>
+                    <input type="file" id="jsonFileInput" accept=".json">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 0;">
+                    <button class="btn btn-sm" style="width: 100%; min-height: 44px; background-color: #475569;" onclick="triggerJSONImport()">
+                        ⬆️ Carregar Informações do Backup
+                    </button>
+                </div>
             </div>
 
             <div class="card">
-                <div class="card-title">Alunos da turma</div>
-                <div id="studentList" class="stack"></div>
-                <div class="form-group" style="margin-top: 16px;">
-                    <label for="newStudentName">Adicionar aluno</label>
-                    <input id="newStudentName" type="text" placeholder="Nome do aluno">
-                </div>
-                <button class="btn btn-success" id="addStudentBtn">Adicionar aluno</button>
-            </div>
+                <div class="card-title">Importar Alunos e Turmas por Arquivo TXT</div>
 
-            <div class="card">
-                <div class="card-title">Backup / Importação</div>
-                <div class="stack">
-                    <button class="btn btn-secondary" id="exportDataBtn">Exportar backup</button>
-                    <label class="btn btn-secondary" for="importDataInput" style="cursor: pointer;">Importar backup</label>
-                    <input id="importDataInput" type="file" accept="application/json" style="display: none;">
-                    <button class="btn btn-danger" id="resetDataBtn">Resetar dados</button>
-                </div>
-            </div>
-        </section>
-
-        <section id="tab-frequencia" class="tab-content">
-            <div class="card">
-                <div class="card-title">Faltas mensais</div>
-                <div id="attendanceStats" class="stat-grid"></div>
-                <div id="attendanceList" class="stack"></div>
-            </div>
-        </section>
-
-        <section id="tab-consolidado" class="tab-content">
-            <div class="card">
-                <div class="card-title">Consolidado</div>
-                <div id="consolidatedStats" class="stat-grid"></div>
-                <div id="consolidatedList" class="stack"></div>
-            </div>
-        </section>
-    </div>
-
-    <script>
-        const STORAGE_KEY = 'controleFrequenciaAppData';
-        const MONTHS = ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'];
-        const MONTH_LABELS = {
-            jan: 'Jan', fev: 'Fev', mar: 'Mar', abr: 'Abr', mai: 'Mai', jun: 'Jun',
-            jul: 'Jul', ago: 'Ago', set: 'Set', out: 'Out', nov: 'Nov', dez: 'Dez'
-        };
-
-        const state = loadState();
-
-        function loadState() {
-            try {
-                const raw = localStorage.getItem(STORAGE_KEY);
-                if (!raw) {
-                    return {
-                        turmas: [],
-                        activeTurmaId: null
-                    };
-                }
-                const parsed = JSON.parse(raw);
-                if (!parsed || !Array.isArray(parsed.turmas)) {
-                    return { turmas: [], activeTurmaId: null };
-                }
-                return parsed;
-            } catch (error) {
-                console.error('Erro ao carregar storage:', error);
-                return { turmas: [], activeTurmaId: null };
-            }
-        }
-
-        function saveState() {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-        }
-
-        function generateId(prefix) {
-            return prefix + '-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
-        }
-
-        function getActiveTurma() {
-            return state.turmas.find(turma => turma.id === state.activeTurmaId) || null;
-        }
-
-        function ensureActiveTurma() {
-            if (!state.turmas.length) {
-                state.activeTurmaId = null;
-                return null;
-            }
-            if (!state.activeTurmaId || !state.turmas.some(turma => turma.id === state.activeTurmaId)) {
-                state.activeTurmaId = state.turmas[0].id;
-            }
-            return getActiveTurma();
-        }
-
-        function createStudent(name) {
-            return {
-                id: generateId('student'),
-                nome: name.trim(),
-                faltas: Object.fromEntries(MONTHS.map(month => [month, 0]))
-            };
-        }
-
-        function createTurma(name) {
-            if (!name || !name.trim()) {
-                alert('Informe o nome da turma.');
-                return;
-            }
-
-            const turma = {
-                id: generateId('turma'),
-                nome: name.trim(),
-                alunos: [
-                    createStudent('Aluno 1'),
-                    createStudent('Aluno 2')
-                ]
-            };
-
-            state.turmas.push(turma);
-            state.activeTurmaId = turma.id;
-            saveState();
-            renderApp();
-        }
-
-        function addStudentToActiveTurma() {
-            const studentNameInput = document.getElementById('newStudentName');
-            const nome = studentNameInput.value.trim();
-            const turma = getActiveTurma();
-
-            if (!turma) {
-                alert('Crie ou selecione uma turma antes de adicionar alunos.');
-                return;
-            }
-
-            if (!nome) {
-                alert('Informe o nome do aluno.');
-                return;
-            }
-
-            turma.alunos.push(createStudent(nome));
-            saveState();
-            studentNameInput.value = '';
-            renderApp();
-        }
-
-        function removeStudent(studentId) {
-            const turma = getActiveTurma();
-            if (!turma) return;
-            turma.alunos = turma.alunos.filter(aluno => aluno.id !== studentId);
-            saveState();
-            renderApp();
-        }
-
-        function updateFalta(studentId, month, value) {
-            const turma = getActiveTurma();
-            if (!turma) return;
-
-            const aluno = turma.alunos.find(item => item.id === studentId);
-            if (!aluno) return;
-            aluno.faltas[month] = Math.max(0, Number(value) || 0);
-            saveState();
-            renderApp();
-        }
-
-        function renameActiveTurmaPrompt() {
-            const turma = getActiveTurma();
-            if (!turma) {
-                alert('Selecione uma turma antes de renomear.');
-                return;
-            }
-
-            const novoNome = prompt('Novo nome da turma:', turma.nome);
-            if (novoNome === null) return;
-
-            const nomeLimpo = novoNome.trim();
-            if (!nomeLimpo) {
-                alert('O nome da turma não pode ficar vazio.');
-                return;
-            }
-
-            turma.nome = nomeLimpo;
-            saveState();
-            renderApp();
-        }
-
-        function exportData() {
-            const dataStr = JSON.stringify(state, null, 2);
-            const blob = new Blob([dataStr], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'backup-controle-frequencia.json';
-            a.click();
-            URL.revokeObjectURL(url);
-        }
-
-        function importData(file) {
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function (event) {
-                try {
-                    const parsed = JSON.parse(event.target.result);
-                    if (!parsed || !Array.isArray(parsed.turmas)) {
-                        throw new Error('Arquivo inválido');
-                    }
-
-                    state.turmas = parsed.turmas;
-                    state.activeTurmaId = parsed.activeTurmaId || (state.turmas[0] ? state.turmas[0].id : null);
-                    saveState();
-                    renderApp();
-                    alert('Backup importado com sucesso!');
-                } catch (error) {
-                    alert('Arquivo de backup inválido.');
-                    console.error(error);
-                }
-            };
-            reader.readAsText(file);
-        }
-
-        function resetAllData() {
-            const confirmed = confirm('Deseja apagar todos os dados salvos localmente?');
-            if (!confirmed) return;
-
-            state.turmas = [];
-            state.activeTurmaId = null;
-            saveState();
-            renderApp();
-        }
-
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-btn').forEach(button => {
-                button.classList.toggle('active', button.dataset.tab === tabId);
-            });
-
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.toggle('active', content.id === tabId);
-            });
-        }
-
-        function renderTurmaSelector() {
-            const select = document.getElementById('globalTurmaSelect');
-            select.innerHTML = '';
-
-            if (!state.turmas.length) {
-                select.innerHTML = '<option value="">Nenhuma turma cadastrada</option>';
-                return;
-            }
-
-            state.turmas.forEach(turma => {
-                const option = document.createElement('option');
-                option.value = turma.id;
-                option.textContent = turma.nome;
-                if (turma.id === state.activeTurmaId) option.selected = true;
-                select.appendChild(option);
-            });
-        }
-
-        function renderTurmaList() {
-            const container = document.getElementById('studentList');
-            const turma = getActiveTurma();
-
-            if (!turma) {
-                container.innerHTML = '<p class="muted">Ainda não há turma selecionada.</p>';
-                return;
-            }
-
-            if (!turma.alunos.length) {
-                container.innerHTML = '<p class="muted">Nenhum aluno cadastrado nesta turma.</p>';
-                return;
-            }
-
-            container.innerHTML = turma.alunos.map(aluno => `
-                <div class="student-item">
-                    <div class="student-info">
-                        <div class="student-name">${aluno.nome}</div>
-                    </div>
-                    <button class="btn btn-sm btn-danger" data-remove-student="${aluno.id}">Remover</button>
-                </div>
-            `).join('');
-        }
-
-        function getTotalFaltasByAluno(aluno) {
-            return MONTHS.reduce((total, month) => total + Number(aluno.faltas[month] || 0), 0);
-        }
-
-        function renderAttendanceStats() {
-            const turma = getActiveTurma();
-            const container = document.getElementById('attendanceStats');
-
-            if (!turma || !turma.alunos.length) {
-                container.innerHTML = '<div class="muted">Sem dados para exibir.</div>';
-                return;
-            }
-
-            const totalAlunos = turma.alunos.length;
-            const totalFaltas = turma.alunos.reduce((sum, aluno) => sum + getTotalFaltasByAluno(aluno), 0);
-            const media = totalAlunos ? (totalFaltas / totalAlunos).toFixed(1) : 0;
-
-            container.innerHTML = `
-                <div class="stat-box"><div class="num">${totalAlunos}</div><div class="label">Alunos</div></div>
-                <div class="stat-box"><div class="num">${totalFaltas}</div><div class="label">Faltas</div></div>
-                <div class="stat-box"><div class="num">${media}</div><div class="label">Média</div></div>
-                <div class="stat-box"><div class="num">${Object.keys(MONTH_LABELS).length}</div><div class="label">Meses</div></div>
-            `;
-        }
-
-        function renderAttendanceList() {
-            const turma = getActiveTurma();
-            const container = document.getElementById('attendanceList');
-
-            if (!turma || !turma.alunos.length) {
-                container.innerHTML = '<p class="muted">Nenhum aluno cadastrado para registrar faltas.</p>';
-                return;
-            }
-
-            container.innerHTML = turma.alunos.map(aluno => {
-                const total = getTotalFaltasByAluno(aluno);
-                const markerClass = total > 0 ? 'badge badge-danger' : 'badge badge-success';
-                const markerText = total > 0 ? 'Com faltas' : 'Sem faltas';
-
-                return `
-                    <div class="student-item" style="display:block; border-bottom:1px solid var(--border); padding:12px 0;">
-                        <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:10px;">
-                            <div class="student-name">${aluno.nome}</div>
-                            <span class="${markerClass}">${markerText}</span>
-                        </div>
-                        <div class="counter-container">
-                            ${MONTHS.map(month => `
-                                <div class="row" style="gap: 6px;">
-                                    <button class="btn-counter" data-action="decrease" data-month="${month}" data-student-id="${aluno.id}">−</button>
-                                    <input class="counter-input" data-student-id="${aluno.id}" data-month="${month}" type="number" min="0" value="${Number(aluno.faltas[month] || 0)}" aria-label="Faltas de ${aluno.nome} em ${MONTH_LABELS[month]}">
-                                    <button class="btn-counter" data-action="increase" data-month="${month}" data-student-id="${aluno.id}">+</button>
-                                    <span class="muted" style="width:36px; text-align:center;">${MONTH_LABELS[month]}</span>
-                                </div>
-                            `).join('')}
-                        </div>
-                        <div class="text-sm" style="margin-top:10px;">Total geral: <strong>${total}</strong> faltas</div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function renderConsolidatedStats() {
-            const turma = getActiveTurma();
-            const container = document.getElementById('consolidatedStats');
-
-            if (!turma || !turma.alunos.length) {
-                container.innerHTML = '<div class="muted">Sem dados para consolidar.</div>';
-                return;
-            }
-
-            const totalsPorMes = Object.fromEntries(MONTHS.map(month => [month, 0]));
-            turma.alunos.forEach(aluno => {
-                MONTHS.forEach(month => {
-                    totalsPorMes[month] += Number(aluno.faltas[month] || 0);
-                });
-            });
-
-            const totalGeral = Object.values(totalsPorMes).reduce((sum, value) => sum + value, 0);
-            const maiorMes = MONTHS.reduce((current, month) => totalsPorMes[month] > totalsPorMes[current] ? month : current, 'jan');
-            const alunoComMaisFaltas = turma.alunos.reduce((max, aluno) => {
-                const total = getTotalFaltasByAluno(aluno);
-                if (!max || total > max.total) return { nome: aluno.nome, total };
-                return max;
-            }, null);
-
-            container.innerHTML = `
-                <div class="stat-box"><div class="num">${totalGeral}</div><div class="label">Total</div></div>
-                <div class="stat-box"><div class="num">${MONTH_LABELS[maiorMes]}</div><div class="label">Pico</div></div>
-                <div class="stat-box"><div class="num">${alunoComMaisFaltas ? alunoComMaisFaltas.nome : '-'}</div><div class="label">Maior faltas</div></div>
-                <div class="stat-box"><div class="num">${alunoComMaisFaltas ? alunoComMaisFaltas.total : 0}</div><div class="label">Faltas</div></div>
-            `;
-        }
-
-        function renderConsolidatedList() {
-            const turma = getActiveTurma();
-            const container = document.getElementById('consolidatedList');
-
-            if (!turma || !turma.alunos.length) {
-                container.innerHTML = '<p class="muted">Nenhum aluno para consolidar.</p>';
-                return;
-            }
-
-            const rows = turma.alunos.map(aluno => {
-                const total = getTotalFaltasByAluno(aluno);
-                const status = total > 0 ? '<span class="badge badge-danger">Faltas</span>' : '<span class="badge badge-success">OK</span>';
-                const meses = MONTHS.map(month => `${MONTH_LABELS[month]}: ${aluno.faltas[month]}`).join(' • ');
-                return `
-                    <div class="student-item" style="display:block;">
-                        <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:6px;">
-                            <div class="student-name">${aluno.nome}</div>
-                            ${status}
-                        </div>
-                        <div class="text-sm">Total: <strong>${total}</strong></div>
-                        <div class="text-sm">${meses}</div>
-                    </div>
-                `;
-            }).join('');
-
-            container.innerHTML = rows;
-        }
-
-        function renderApp() {
-            ensureActiveTurma();
-            renderTurmaSelector();
-            renderTurmaList();
-            renderAttendanceStats();
-            renderAttendanceList();
-            renderConsolidatedStats();
-            renderConsolidatedList();
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const tabButtons = document.querySelectorAll('.tab-btn');
-            tabButtons.forEach(button => {
-                button.addEventListener('click', () => switchTab(button.dataset.tab));
-            });
-
-            document.getElementById('createTurmaBtn').addEventListener('click', () => {
-                const input = document.getElementById('newTurmaName');
-                createTurma(input.value);
-                input.value = '';
-            });
-
-            document.getElementById('addStudentBtn').addEventListener('click', addStudentToActiveTurma);
-            document.getElementById('renameTurmaBtn').addEventListener('click', renameActiveTurmaPrompt);
-            document.getElementById('exportDataBtn').addEventListener('click', exportData);
-            document.getElementById('resetDataBtn').addEventListener('click', resetAllData);
-            document.getElementById('importDataInput').addEventListener('change', (event) => {
-                const file = event.target.files && event.target.files[0];
-                importData(file);
-                event.target.value = '';
-            });
-
-            document.getElementById('globalTurmaSelect').addEventListener('change', (event) => {
-                state.activeTurmaId = event.target.value || null;
-                saveState();
-                renderApp();
-            });
-
-            document.getElementById('studentList').addEventListener('click', (event) => {
-                const button = event.target.closest('[data-remove-student]');
-                if (!button) return;
-                removeStudent(button.dataset.removeStudent);
-            });
-
-            document.getElementById('attendanceList').addEventListener('click', (event) => {
-                const button = event.target.closest('[data-action]');
-                if (!button) return;
-
-                const { studentId, month, action } = button.dataset;
-                const turma = getActiveTurma();
-                const aluno = turma && turma.alunos.find(item => item.id === studentId);
-                if (!aluno) return;
-
-                const currentValue = Number(aluno.faltas[month] || 0);
-                const nextValue = action === 'increase' ? currentValue + 1 : currentValue - 1;
-                updateFalta(studentId, month, Math.max(0, nextValue));
-            });
-
-            document.getElementById('attendanceList').addEventListener('input', (event) => {
-                const input = event.target.closest('.counter-input');
-                if (!input) return;
-                updateFalta(input.dataset.studentId, input.dataset.month, input.value);
-            });
-
-            document.getElementById('newStudentName').addEventListener('keydown', (event) => {
-                if (event.key === 'Enter') {
-                    addStudentToActiveTurma();
-                }
-            });
-
-            document.getElementById('newTurmaName').addEventListener('keydown', (event) => {
-                if (event.key === 'Enter') {
-                    const input = document.getElementById('newTurmaName');
-                    createTurma(input.value);
-                    input.value = '';
-                }
-            });
-
-            renderApp();
-        });
-    </script>
-</body>
-</html>
+                <div class="form-group">
